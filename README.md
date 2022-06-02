@@ -1,2 +1,9 @@
 # Robot_GNC
-Working towards a functioning completion of my capstone project. The robot will initially utilize GPS and IMU to navigate around a known space.
+Working towards a functioning completion of my capstone project. 
+
+Creating a ground based robot.
+
+The robot will:
+- Utilize GPS and IMU to determine location
+- Navigate to given location based on current known location
+- 
