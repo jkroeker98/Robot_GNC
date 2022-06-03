@@ -33,30 +33,18 @@ entity UART is
     --    Parity     : STD_LOGIC := '0';  -- Parity {0 = none | 1 = parity}
     --    ParType    : STD_LOGIC := '0'); -- Parity type {0 = even | 1 = odd}
     Port (   
-        uart_rxd_in  : in STD_LOGIC;     -- Received data from UART
+        uart_rxd_comp  : in STD_LOGIC;     -- Received data from UART
         CLK100MHZ    : in STD_LOGIC;     -- 100 MHz Clock signal
-        led          : out STD_LOGIC_VECTOR(3 downto 0); -- LED Outputs
+        led          : out STD_LOGIC_VECTOR(3 downto 0) := "0000"; -- LED Outputs
         --rst        : in STD_LOGIC;      -- Master reset
         --data       : inout STD_LOGIC_VECTOR(7 downto 0);                    -- Data Queue
         --rx_rdy     : out STD_LOGIC;     -- New data has been received and is ready to read 
         --tx_rdy     : out STD_LOGIC;     -- New data has is being transmitted
-        uart_txd_out : out STD_LOGIC    -- Transmit data pin
+        uart_txd_comp : out STD_LOGIC    -- Transmit data pin
         );
 end UART;
 
 architecture Behavioral of UART is
-
-    component UART_RX_NandLand
-        generic (
-            g_CLKS_PER_BIT : integer := 10417     -- Needs to be set correctly
-        );
-        port (
-            i_Clk       : in  std_logic;
-            i_RX_Serial : in  std_logic;
-            o_RX_DV     : out std_logic;
-            o_RX_Byte   : out std_logic_vector(7 downto 0)
-        );
-     end component UART_RX_NandLand;
     
     component UART_RX is
         generic (
@@ -90,30 +78,26 @@ architecture Behavioral of UART is
         );
     end component UART_TX;
 
-    constant zero    : UNSIGNED(7 downto 0) := "00110000"; --ascii value for 0
-    
     signal r_DV   : STD_LOGIC;
     signal r_Byte : STD_LOGIC_VECTOR(7 downto 0);
     signal r_TX_Active : STD_LOGIC := '0';
     signal r_TX_Done : STD_LOGIC := '0';
     signal temp_LED  : STD_LOGIC_VECTOR(3 downto 0) := "0000";
 begin
-    --UART_RX_Comp : UART_RX_NandLand
-    --    port map( i_Clk => CLK100MHZ, i_RX_Serial => uart_rxd_in , o_RX_DV => r_DV, o_RX_Byte => r_Byte);
-    
+
     UART_RX_Comp : UART_RX
-        port map ( i_Clk => CLK100MHZ, i_RX_Serial => uart_rxd_in, o_RX_DV => r_DV, o_RX_Byte => r_Byte);
+        port map ( i_Clk => CLK100MHZ, i_RX_Serial => uart_rxd_comp, o_RX_DV => r_DV, o_RX_Byte => r_Byte);
 
    UART_TX_Comp : UART_TX
-       port map ( i_Clk => CLK100MHZ, i_TX_DV => r_DV, i_TX_Byte => r_Byte , o_TX_Active => r_TX_Active, o_TX_Serial => uart_txd_out, o_TX_Done => r_TX_Done); 
+       port map ( i_Clk => CLK100MHZ, i_TX_DV => r_DV, i_TX_Byte => r_Byte , o_TX_Active => r_TX_Active, o_TX_Serial => uart_txd_comp, o_TX_Done => r_TX_Done); 
         
-    calcLED : process (r_DV) is 
+    calcLED : process (r_DV, r_TX_Done) is 
         begin
         
         -- Toggle LED 0 whenever done recieving a message
         if rising_edge(r_DV) then
-            temp_LED <= not temp_LED;
-            led <= temp_LED; 
+            temp_LED(0) <= not temp_LED(0);
+            led(0) <= temp_LED(0); 
         end if;
        -- Toggle LED 1 whenever done trasnmitting a message
        if rising_edge(r_TX_Done) then
