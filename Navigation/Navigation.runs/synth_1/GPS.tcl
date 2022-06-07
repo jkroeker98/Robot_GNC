@@ -92,6 +92,11 @@ read_vhdl -library xil_defaultlib {
   G:/Git_Projects/Robot_GNC/Navigation/Common/UART_RX.vhd
   G:/Git_Projects/Robot_GNC/Navigation/Common/UART_TX.vhd
   G:/Git_Projects/Robot_GNC/Navigation/GPS/GPS.vhd
+  G:/Git_Projects/Robot_GNC/Navigation/Common/UART.vhd
+  G:/Git_Projects/Robot_GNC/Navigation/Common/SPI.vhd
+  G:/Git_Projects/Robot_GNC/Navigation/Common/SPI_Module.vhd
+  G:/Git_Projects/Robot_GNC/Navigation/GPS/GPS_Checksum.vhd
+  G:/Git_Projects/Robot_GNC/Navigation/GPS/GPS_Parser.vhd
 }
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being

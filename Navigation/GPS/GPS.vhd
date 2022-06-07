@@ -101,7 +101,6 @@ architecture Behavioral of GPS is
     signal r_TX_Active_Gps : STD_LOGIC := '0';
     signal r_TX_Done_Comp : STD_LOGIC := '0';
     signal r_TX_Done_Gps : STD_LOGIC := '0';
-
     signal temp_LED  : STD_LOGIC_VECTOR(3 downto 0) := "0000";
 begin
 
@@ -126,7 +125,7 @@ begin
     
     -- Echo computer data
     --r_DV_TX_Comp <= r_DV_RX_Comp;
-    --r_Byte_TX_Comp <= r_Byte_RX_Gps;
+    --r_Byte_TX_Comp <= r_Byte_RX_Gps
     
     calcLED : process (r_DV_RX_Comp, r_DV_RX_GPS, GPS_1PPS)
         begin
